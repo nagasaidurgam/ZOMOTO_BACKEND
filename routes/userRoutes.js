@@ -5,6 +5,6 @@ const userController = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 
-router.post("/gettAllUsers", authMiddleware, userController.getAllUsers);
+router.post("/getAllUsers", authMiddleware, userController.getAllUsers);
 router.post("/getUserById/:id", authMiddleware, userController.getUserById);
 module.exports = router;
