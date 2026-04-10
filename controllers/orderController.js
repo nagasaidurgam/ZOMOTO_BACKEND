@@ -54,11 +54,14 @@ exports.placeOrder = async(req, res) => {
     );
  }
 res.status(201).json({
-    message: "Internal server error",
+    message: "Order Placed Successfully",
 });
 
     }catch(error){
-        res.status(500).json({message: "Internal server error"});
+        console.error(error);
+        res.status(500).json({message: "Internal server error",
+            error: error.message
+        });
     }
 }
 
@@ -79,7 +82,10 @@ exports.getMyOrders = async(req, res) => {
         });
 
     }catch(error){
-        res.status(500).json({message: "Internal server error"})
+        console.error(error)
+        res.status(500).json({message: "Internal server error",
+            error: error.message
+        });
     }
 };
 
@@ -99,9 +105,33 @@ exports.getAllOrders = async(req, res) => {
     
         }catch(error){
         console.error(error)
-        res.status(500).json({message: "Internal server error"});
+        res.status(500).json({message: "Internal server error",
+            error: error.message
+        });
     }
     
+}
+
+//get all orders with details
+
+exports.getAllOrdersWithDetails = async(req, res)=> {
+
+    try{
+        const[data]= await db.query(`
+            SELECT u.id, u.name as user_name, r.name, oi.order_id, oi.quantity, mi.name, mi.price, o.status
+            FROM users u o.user_id = u.id
+            JOIN restaurants r ON r.id = mi.restaurant.id
+            JOIN  ON order_items oi oi.order_id = mi.id
+            JOIN ON menu_items mi 
+            JOIN ON orders o`)
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({message: "Internal server error",
+            error: error.message
+        })
+
+    }
 }
 
 //update order status
@@ -133,6 +163,7 @@ exports.updateOrderStatus = async(req, res) => {
         console.error(error)
         res.status(500).json({
             message: "Internal server error",
+            error: error.message
         });
     }
 };
